@@ -39,6 +39,7 @@ public:
 			fin >> row >> col;
 			ps.insert(position(row-1, col-1));
 		}
+		return 0;
 	}
 
 };

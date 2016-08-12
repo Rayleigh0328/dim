@@ -5,23 +5,17 @@
 
 using namespace std;
 
-struct TrieNode
+class TrieNode
 {
-	long long bias;
+private:
+	static int serial_num;
+
+public:
 	map<long long, TrieNode*> child_map;
-	static int var_num;
+	int label;
 
-	TrieNode()
-	{
-		bias = -1;
-		++var_num;
-		child_map.clear();
-	}
+	TrieNode();
 
-	TrieNode(long long b)
-	{
-		TrieNode();
-		bias = b;
-	}
+	static void reset_label_count();
 };
 #endif
