@@ -20,11 +20,9 @@ vector<DimensionCode::BIAS_TYPE> DimensionCode::encode(const vector<BIAS_TYPE> &
 	TrieNode::reset_label_count();
 	TrieNode *root = new TrieNode();
 
-	vector<DimensionCode::grammar_element> residual;
-	// vector<vector<DimensionCode::grammar_element>> rules;
-	// rules.clear();
-	// // rules
-	// rules.push_back(vector<DimensionCode::grammar_element>());
+	vector<vector<DimensionCode::grammar_element>> rules;
+	rules.clear();
+	rules.push_back(vector<DimensionCode::grammar_element>());
 
 	// deal with first element
 
@@ -34,7 +32,7 @@ vector<DimensionCode::BIAS_TYPE> DimensionCode::encode(const vector<BIAS_TYPE> &
 		par_ss << a.front() << endl;
 	#endif
 
-	residual.push_back(grammar_element(a.front(), 0));
+	rules[0].push_back(grammar_element(a.front(), 0));
 	a.pop_front();
 
 	while (!a.empty())
@@ -64,9 +62,11 @@ vector<DimensionCode::BIAS_TYPE> DimensionCode::encode(const vector<BIAS_TYPE> &
 			if (cur->child_map.find(diff) == cur->child_map.end())
 			{
 				cur->child_map[diff] = new TrieNode();
-				/**Create new variable in grammar**/
-
-				/****/
+				// create new rules
+				int num = rules.size();
+				rules.push_back(vector<grammar_element>());
+				rules[num].push_back(grammar_element(0, cur->label));
+				rules[num].push_back(grammar_element(diff, 0));
 				cur = cur->child_map[diff];
 				break;
 			}
@@ -77,7 +77,7 @@ vector<DimensionCode::BIAS_TYPE> DimensionCode::encode(const vector<BIAS_TYPE> &
 		}
 
 		result.second = cur->label;
-		residual.push_back(result);
+		rules[0].push_back(result);
 		#ifdef PRINT_PARTITION
 			par_ss << endl;
 		#endif
@@ -87,11 +87,16 @@ vector<DimensionCode::BIAS_TYPE> DimensionCode::encode(const vector<BIAS_TYPE> &
 		cout << endl << par_ss.str() << endl;
 	#endif
 
-	#ifdef PRINT_RESIDUAL 
+	#ifdef PRINT_RAW_GRAMMAR
 		stringstream res_ss;
-		for (int i=0; i<residual.size();++i)
-			res_ss << "(" << residual[i].first << "," << residual[i].second  << ") ";
-		cout << "Residual after GT: " << endl;
+		for (int i=0; i<rules.size();++i)
+		{
+			res_ss << "V_" << i << ": "; 
+			for (int j=0;j<rules[i].size();++j)
+				res_ss << "(" << rules[i][j].first << "," << rules[i][j].second  << ") ";
+			res_ss << endl;
+		}
+		cout << "Raw grammar after GT: " << endl;
 		cout << res_ss.str() << endl;
 	#endif
 	// int cur_index = 0;
