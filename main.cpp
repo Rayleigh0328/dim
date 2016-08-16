@@ -10,6 +10,9 @@
 #include "hilbert_scanner.h"
 #include "dimension_code.h"
 
+#define USE_HILBERT_SCAN
+// #define USE_RASTER_SCAN
+
 using namespace std;
 
 int main(int argc, char **argv)
@@ -29,10 +32,17 @@ int main(int argc, char **argv)
 	cout << "width: " << width << endl;
 	cout << "# of NZ: " << tot_nz << endl;
  	
- 	//RasterScanner s;
- 	HilbertScanner s;
- 	vector<long long> serialized = s.scan(height, width, ps);
- 	cout << "Serialization finished" << endl;
+ 	#ifdef USE_RASTER_SCAN
+	 	RasterScanner s;
+	 	vector<long long> serialized = s.scan(height, width, ps);
+	 	cout << "Raster Serialization finished" << endl;
+ 	#endif
+ 	
+ 	#ifdef USE_HILBERT_SCAN
+	 	HilbertScanner s;
+	 	vector<long long> serialized = s.scan(height, width, ps);
+	 	cout << "Hilbert Serialization finished" << endl;
+ 	#endif
 	
  	// Following is just test code, check the number of positions in vector
  	// is the same as in set. And the vector is increasing.

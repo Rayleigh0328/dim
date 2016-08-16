@@ -37,6 +37,7 @@ public:
 		{
 			int row, col;
 			fin >> row >> col;
+			fin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			ps.insert(position(row-1, col-1));
 		}
 		return 0;
