@@ -7,6 +7,7 @@
 #include "position.h"
 #include "scanner.h"
 #include "raster_scanner.h"
+#include "hilbert_scanner.h"
 #include "dimension_code.h"
 
 using namespace std;
@@ -28,9 +29,11 @@ int main(int argc, char **argv)
 	cout << "width: " << width << endl;
 	cout << "# of NZ: " << tot_nz << endl;
  	
- 	RasterScanner rs;
- 	vector<long long> serialized = rs.scan(height, width, ps);
- 
+ 	//RasterScanner s;
+ 	HilbertScanner s;
+ 	vector<long long> serialized = s.scan(height, width, ps);
+ 	cout << "Serialization finished" << endl;
+	
  	// Following is just test code, check the number of positions in vector
  	// is the same as in set. And the vector is increasing.
  	
@@ -46,4 +49,25 @@ int main(int argc, char **argv)
  	// cout << flag << endl;
 
  	vector<long long> codeword = DimensionCode::encode(serialized);
+ 	vector<long long> recon = DimensionCode::decode(codeword);
+
+ 	bool flag_pass = (recon.size() == serialized.size());
+	for (int i=0;i<recon.size();++i)
+		if (serialized[i] != recon[i])
+		{
+			flag_pass = false;
+			break;
+		}
+
+	if (flag_pass)
+	{
+		cout << "CORRECT" << endl;
+		cout << "Dim vector length: " << codeword.size() << endl;
+		return 0;
+	}
+	else
+	{
+		cout << "WRONG!!!" << endl;
+		return -1;
+	}
 }
