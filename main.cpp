@@ -8,10 +8,12 @@
 #include "scanner.h"
 #include "raster_scanner.h"
 #include "hilbert_scanner.h"
+#include "trans_raster_scanner.h"
 #include "dimension_code.h"
 
-#define USE_HILBERT_SCAN
+// #define USE_HILBERT_SCAN
 // #define USE_RASTER_SCAN
+#define USE_TRANS_RASTER_SCAN
 
 using namespace std;
 
@@ -44,6 +46,12 @@ int main(int argc, char **argv)
 	 	cout << "Hilbert Serialization finished" << endl;
  	#endif
 	
+	#ifdef USE_TRANS_RASTER_SCAN
+	 	TransRasterScanner s;
+	 	vector<long long> serialized = s.scan(height, width, ps);
+	 	cout << "T-Raster Serialization finished" << endl;
+ 	#endif
+
  	// Following is just test code, check the number of positions in vector
  	// is the same as in set. And the vector is increasing.
  	
